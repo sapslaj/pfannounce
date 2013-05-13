@@ -6,12 +6,13 @@
  
 if(!defined('IN_MYBB'))
 {
-	die();
+	die('Error: 404 not found. I swear. There isn\'t anything to see here. ');
 }
 
 $plugins->add_hook('index_start', 'pfannounce');
 $plugins->add_hook('portal_start', 'pfannounce');
 
+// Plugin info
 function pfannounce_info()
 {
     return array
@@ -21,7 +22,7 @@ function pfannounce_info()
         'website'=>'http://sapslaj.polyforums.com',
         'author'=>'sapslaj',
         'version'=>'1.0',
-        'compatibilty'=>'16*,17*,18*'
+        'compatibilty'=>'1**' // Compat 1.4 - 1.8
     );
 }
 
@@ -30,14 +31,12 @@ function pfannounce_activate()
     global $db;
     
     require_once MYBB_ROOT.'/inc/adminfunctions_templates.php';
-	find_replace_templatesets('index','#'.preg_quote('{$pfannounce}
-').'#i','',0);
-	find_replace_templatesets('portal','#'.preg_quote('{$pfannounce}
-').'#i','',0);
-	find_replace_templatesets('index','#'.preg_quote('{$forums}').'#i','{$pfannounce}
-{$forums}');
-	find_replace_templatesets('portal','#'.preg_quote('{$announcements}').'#i','{$pfannounce}
-{$announcements}');
+    
+    // I have no idea what I'm doing. 
+	find_replace_templatesets('index','#'.preg_quote('{$pfannounce}').'#i','',0);
+	find_replace_templatesets('portal','#'.preg_quote('{$pfannounce}').'#i','',0);
+	find_replace_templatesets('index','#'.preg_quote('{$forums}').'#i','{$pfannounce}{$forums}');
+	find_replace_templatesets('portal','#'.preg_quote('{$announcements}').'#i','{$pfannounce}{$announcements}');
 
     $settingsgroup = array
     (
@@ -59,7 +58,7 @@ function pfannounce_activate()
         'description' => 'Turn plugin On/off',
         'optionscode' => 'onoff',
         'value' => '1',
-        'disporder' => 2,
+        'disporder' => 1,
         'gid' => intval($gid),
     );
     
@@ -95,10 +94,10 @@ function pfannounce_activate()
 function pfannounce_deactivate()
 {
 	require_once MYBB_ROOT.'/inc/adminfunctions_templates.php';
-	find_replace_templatesets('index','#'.preg_quote('{$pfannounce}
-').'#i','',0);
-	find_replace_templatesets('portal','#'.preg_quote('{$pfannounce}
-').'#i','',0);
+	
+	// I seriously have no idea what's going on here. I'll figure it out later. Need moar caffeine.
+	find_replace_templatesets('index','#'.preg_quote('{$pfannounce}').'#i','',0);
+	find_replace_templatesets('portal','#'.preg_quote('{$pfannounce}').'#i','',0);
 
     global $db;
     $db->query("DELETE FROM ".TABLE_PREFIX."settings WHERE name IN ('pfannounce_header')");
